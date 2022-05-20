@@ -1,0 +1,197 @@
+#!/bin/bash
+
+while true
+do
+
+# Logo
+
+echo "=================================================================================================================================="
+curl -s https://raw.githubusercontent.com/AlekseyMoskalev1/script/main/Noders.sh | bash
+echo "=================================================================================================================================="
+
+
+    
+PS3='Select an action: '
+options=(
+"Prepare the server for installation"
+"Install node"
+"Check node status"
+"Create wallet"
+"Create validator"
+"Parametrs"
+"Exit")
+
+select opt in "${options[@]}"
+               do
+                   case $opt in
+                   
+"Prepare the server for installation")
+               echo "============================================================"
+               echo "Preparation has begun"
+               echo "============================================================"
+
+#APT
+sudo apt update && sudo apt upgrade -y
+sudo apt install build-essential jq wget git htop curl -y
+
+#Go
+wget "https://golang.org/dl/go1.17.2.linux-amd64.tar.gz"
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf "go1.17.2.linux-amd64.tar.gz"
+rm "go1.17.2.linux-amd64.tar.gz"
+echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+#Starport
+curl https://get.starport.network/starport! | bash
+
+
+               echo "============================================================"
+               echo "The server is ready!"
+               echo "============================================================"
+break
+;;
+            
+"Install node")
+
+NODERS_NODE="[NODERS]"
+
+                echo "============================================================"
+                echo "Set parameters"
+                echo "============================================================"
+                echo "Enter Node name:"
+                echo "============================================================"
+
+read COSMIC_NODENAME
+echo 'export COSMIC_NODENAME='${COSMIC_NODENAME} >> $HOME/.bash_profile
+
+                echo "============================================================"
+                echo "Enter Wallet name:"
+                echo "============================================================"
+
+read COSMIC_WALLET              
+echo 'export COSMIC_WALLET='${COSMIC_WALLET} >> $HOME/.bash_profile
+
+CHAIN_ID_COSMIC=darkmatter-1
+echo 'export CHAIN_ID_COSMIC='${CHAIN_ID_COSMIC} >> $HOME/.bash_profile
+. $HOME/.bash_profile
+
+#CloneСosmic
+git clone https://github.com/cosmic-horizon/coho.git
+cd $HOME/coho 
+starport chain build
+cd $HOME
+
+cohod init $COSMIC_NODENAME --chain-id $CHAIN_ID_COSMIC
+
+curl -s https://raw.githubusercontent.com/cosmic-horizon/testnets/main/darkmatter-1/genesis.json > $HOME/.coho/config/genesis.json
+
+PEERS=4338abf9fdbe143e59119d25310d8187e776df8a@89.58.6.243:26656,038e405c3bc3b7a72b2a8fe9759e4495ac9f7ab0@97.113.198.230:26656,20d436ab002bed85fbf0a1740cdf44d56594d62f@149.28.13.161:26656,ffc0a1443298df007f6caf165b4055f091067b41@173.212.249.116:26656,47dd5dc190bd28ccf91d17609682048dcb20ab67@65.108.11.6:26656,767595068673dfed33c0f95fce77f693fb27438c@173.212.230.119:26656,4177031549e3a53a697d0a0c2137925604c8651a@135.181.212.183:26656,fb14afb3ca33df42932ff9bd15e4662ae3d2e9fb@136.243.110.52:26656,6b2942a2266db223bef9104f59694d74d018f25b@142.132.170.122:26656,9291cebff2bb3781957451f85876a70cc7d386b4@95.179.186.131:26656,8ec8203e97e2d6f83d839b29519ea9298ac0b310@95.217.131.135:26656,0d67b8c164f20b82b055b8d88366b104fd3091f7@144.202.124.47:26656
+
+sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" ~/.coho/config/config.toml
+
+external_address=$(wget -qO- eth0.me)
+sed -i.bak -e "s/^external_address = \"\"/external_address = \"$external_address:26656\"/" $HOME/.coho/config/config.toml
+
+#Service
+search=0stake
+replace=0ucoho
+sed -i "s/$search/$replace/" $HOME/.coho/config/app.toml
+
+sudo tee /etc/systemd/system/cohod.service > /dev/null <<EOF
+[Unit]
+Description=COSMIC-HORIZON
+After=network.target
+[Service]
+Type=simple
+User=root
+ExecStart=$(which cohod) start
+Restart=on-failure
+RestartSec=10
+LimitNOFILE=10000
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl enable cohod
+sudo systemctl daemon-reload
+sudo systemctl restart cohod
+
+               echo "============================================================"
+               echo "Installation complete!"
+               echo "============================================================"
+break
+;;
+
+"Check node status")
+
+               echo "============================================================"
+               echo "Wait for the node to sync"
+               echo "============================================================"
+                         
+journalctl -u cohod -f
+break
+;;
+
+"Create wallet")
+. $HOME/.bash_profile
+
+               echo "============================================================"
+               echo "Your wallet name $COSMIC_WALLET"
+               echo "============================================================"
+
+#Create wallet
+
+cohod keys add $COSMIC_WALLET
+               echo "============================================================"
+               echo "Copy and paste your wallet address: "
+               echo "============================================================"
+read COSMIC_WALLET_ADDRESS
+echo 'export COSMIC_WALLET_ADDRESS='${COSMIC_WALLET_ADDRESS} >> $HOME/.bash_profile
+
+break
+;;
+
+"Create validator")
+
+               echo "============================================================"
+               echo "Name your validator $COSMIC_NODENAME"
+               echo "============================================================"
+          
+cohod tx staking create-validator \
+  --amount=100ucoho \
+  --pubkey=$(cohod tendermint show-validator) \
+  --moniker=$COSMIC_NODENAME \
+  --chain-id=$CHAIN_ID_COSMIC \
+  --commission-rate="0.10" \
+  --commission-max-rate="0.20" \
+  --commission-max-change-rate="0.01" \
+  --min-self-delegation="1" \
+  --gas="auto" \
+  --from=$COSMIC_WALLET
+  
+break
+;;
+
+"Parametrs")
+. $HOME/.bash_profile
+
+               echo "============================================================"
+               echo "Your parameters"
+               echo "Node name: $COSMIC_NODENAME"
+               echo "Wallet name: $COSMIC_WALLET"
+               echo "Address your wallet: $COSMIC_WALLET_ADDRESS"
+               curl -s localhost:26657/status | jq .result.sync_info.catching_up
+               cohod status | jq .SyncInfo.latest_block_height
+               echo "============================================================"
+break
+;;
+
+"Exit")
+exit
+;;
+
+*) echo "invalid option $REPLY";;
+esac
+done
+done
