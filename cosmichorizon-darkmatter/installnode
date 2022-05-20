@@ -6,7 +6,7 @@ do
 # Logo
 
 echo "=================================================================================================================================="
-curl -s https://raw.githubusercontent.com/AlekseyMoskalev1/script/main/Noders.sh | bash
+curl -s https://raw.githubusercontent.com/nodersteam/script/main/Noders.sh | bash
 echo "=================================================================================================================================="
 
 
