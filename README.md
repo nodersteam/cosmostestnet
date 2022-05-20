@@ -16,6 +16,6 @@ This repository contains guides, scripts and tools for testnet projects on the C
     + [Uptick]()
 - ##### Tools
     + [TG Bot for Validator](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
-    + [Redelegator](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
+    + [Redelegator](https://www.notion.so/Cosmos-b6ba87716e9a44858e1ffb2f9de89a00)
 
 - ##### Adrbook
