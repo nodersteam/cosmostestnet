@@ -14,5 +14,7 @@ This repository contains guides, scripts and tools for testnet projects on the C
     + [StaFiHUB](http://sabaka.net)
     + [TGrade](http://sabaka.net)
     + [Uptick](http://sabaka.net)
-
+- ##### Tools
+    + [TG Bot for Validator](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
+    + [Redelegator](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
 
