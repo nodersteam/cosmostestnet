@@ -1,1 +1,1 @@
-![](https://i.yapx.ru/SCTOf.jpg)
+![](https://github.com/nodersteam/picture/blob/main/og-image.jpg?raw=true)
