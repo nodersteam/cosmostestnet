@@ -3,7 +3,7 @@
 This repository contains guides, scripts and tools for testnet projects on the Cosmos network
 ---------------------------------------------------------------------------------------------
 
-- #####  <!--Node Installation Guides-->
+- #####  --Node Installation Guides--
     + [Anone](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
     + [AechWay](https://github.com/nodersteam/cosmostestnet/tree/main/archway-augusta-1)
     + [Cosmic Horizon](https://github.com/nodersteam/cosmostestnet/tree/main/cosmichorizon-darkmatter)
