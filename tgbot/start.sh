@@ -26,8 +26,8 @@ echo 'LAST_POWER="'"$VOTING_POWER"'"' >> $LOG_FILE
 source $HOME/.bash_profile
 curl -s "$NODE_RPC/status"> /dev/null
 if [[ $? -ne 0 ]]; then
-    MSG="$ip node is stopped!!! ( узел остановлен )"
-    MSG="$NODENAME $MSG"
+    MSG="Warning! Server with $ip. Node is stopped!"
+    MSG="Project $NODENAME $MSG"
     SEND=$(curl -s -X POST -H "Content-Type:multipart/form-data" "https://api.telegram.org/bot$TG_API/sendMessage?chat_id=$TG_ID&text=$MSG"); exit 1
 fi
 
@@ -36,24 +36,24 @@ if [[ $LAST_POWER -ne $VOTING_POWER ]]; then
     if [[ $DIFF -gt 0 ]]; then
         DIFF="%2B$DIFF"
     fi
-    MSG="$ip voting power changed ( размер стейка валидатора изменился ) $DIFF%0A($LAST_POWER -> $VOTING_POWER)"
+    MSG="Attention! Server with $ip. Voting power changed on $DIFF%0A($LAST_POWER -> $VOTING_POWER)"
 fi
 
 if [[ $LAST_BLOCK -ge $LATEST_BLOCK ]]; then
 
-    MSG="$ip node is probably stuck at block (узел застрял в блоке номер>> ) $LATEST_BLOCK"
+    MSG="Attention! Server with $ip\ Node is probably stuck at block >> $LATEST_BLOCK"
 fi
 
 if [[ $VOTING_POWER -lt 1 ]]; then
-    MSG="$ip validator inactive\jailed ( валидатор не активен\в тюрьме ). Voting power $VOTING_POWER"
+    MSG="Attention! Server with $ip validator inactive\jailed. Voting power $VOTING_POWER"
 fi
 
 if [[ $CATCHING_UP = "true" ]]; then
-    MSG="$ip node is unsync, catching up ( узел находится в процессе синхронизации ). $LATEST_BLOCK -> $REAL_BLOCK"
+    MSG="Attention! Server with $ip node is unsync, catching up. $LATEST_BLOCK -> $REAL_BLOCK"
 fi
 
 if [[ $REAL_BLOCK -eq 0 ]]; then
-    MSG="$ip can't connect to ( пропало соединения с рпц нодой ) $SIDE_RPC"
+    MSG="Attention! Server with $ip can't connect to >> $SIDE_RPC"
 fi
 
 if [[ $MSG != "" ]]; then
