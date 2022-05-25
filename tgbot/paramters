@@ -1,0 +1,63 @@
+#!/bin/bash
+
+while true
+do
+
+# Logo
+
+echo "============================================================"
+curl -s https://raw.githubusercontent.com/nodersteam/script/main/Noders.sh | bash
+echo "============================================================"
+
+
+PS3='Select an action: '
+options=(
+"Setup parametrs" 
+"Start bot"
+"Exit")
+select opt in "${options[@]}"
+               do
+                   case $opt in
+                   
+"Setup parametrs")
+echo "============================================================"
+echo "Setup your node name"
+echo "============================================================"
+read NODENAME
+echo export NODENAME=${NODENAME} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup your API"
+echo "============================================================"
+read TG_API
+echo export TG_API=${TG_API} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup your Chat ID"
+echo "============================================================"
+read TG_ID
+echo export TG_ID=${TG_ID} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+mkdir $HOME/tgbot
+wget -O $HOME/tgbot/start.sh https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/tgbot/start.sh
+chmod +x $HOME/tgbot/start.sh
+break
+;;
+            
+"Start bot")
+echo "============================================================"
+echo "Bot strating"
+echo "============================================================"
+
+crontab -e
+
+break
+;;
+
+"Exit")
+exit
+;;
+
+*) echo "invalid option $REPLY";;
+esac
+done
+done
