@@ -15,7 +15,7 @@ This repository contains guides, scripts and tools for testnet projects on the C
     + [TGrade](https://www.notion.so/TGRADE-692f65a5025c427aaf6bd5220a32d7f4)
     + [Uptick]()
 - ##### Tools
-    + [TG Bot for Validator](https://github.com/nodersteam/cosmostestnet/tree/main/anone-testnet-1)
+    + [TG Bot for Validator](https://github.com/nodersteam/cosmostestnet/tree/main/tgbot)
     + [Redelegator](https://www.notion.so/Cosmos-b6ba87716e9a44858e1ffb2f9de89a00)
 
 - ##### Adrbook
