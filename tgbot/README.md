@@ -8,4 +8,5 @@ curl -s https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/tgbot/pa
 
 Select the "Start bot" item and enter the following data in the line that appears, you also need to leave the next line empty
 
-```*/1 * * * *  /bin/bash $HOME/tgbot/alerts.sh```
+```php
+*/1 * * * *  /bin/bash $HOME/tgbot/alerts.sh```
