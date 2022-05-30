@@ -20,6 +20,8 @@ select opt in "${options[@]}"
                    case $opt in
                    
 "Setup parametrs")
+
+#PARAM TG
 echo "============================================================"
 echo "Setup your node name"
 echo "============================================================"
@@ -35,11 +37,39 @@ echo "Setup your Chat ID"
 echo "============================================================"
 read TG_ID
 echo export TG_ID=${TG_ID} >> $HOME/.bash_profile
+
+#PARAM FOR PROJECT
+echo "============================================================"
+echo "Setup service of project, example - umeed"
+echo "============================================================"
+read PROJECT
+echo export PROJECT=${PROJECT} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup your wallet name"
+echo "============================================================"
+read WALLETNAME
+echo export WALLETNAME=${WALLETNAME} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup your password of wallet"
+echo "============================================================"
+read PWDDD
+echo export PWDDD=${PWDDD} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup denom of token, example - uumee"
+echo "============================================================"
+read DENOM
+echo export DENOM=${DENOM} >> $HOME/.bash_profile
+echo "============================================================"
+echo "Setup your chain id, example - umee-1"
+echo "============================================================"
+read CHAIN_ID
+echo export CHAIN_ID=${CHAIN_ID} >> $HOME/.bash_profile
+echo export DELAY=120 >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
 mkdir $HOME/tgbot
-wget -O $HOME/tgbot/start.sh https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/tgbot/start.sh
-chmod +x $HOME/tgbot/start.sh
+wget -O $HOME/tgbotjail/start.sh https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/tgbotjail/start.sh
+chmod +x $HOME/tgbotjail/start.sh
 break
 ;;
             
@@ -48,7 +78,8 @@ echo "============================================================"
 echo "Bot strating"
 echo "============================================================"
 
-crontab -e
+apt install screen
+screen -s jailbot
 
 break
 ;;
