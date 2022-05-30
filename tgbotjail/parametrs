@@ -78,8 +78,7 @@ echo "============================================================"
 echo "Bot strating"
 echo "============================================================"
 
-apt install screen
-screen -s jailbot
+crontab -e
 
 break
 ;;
