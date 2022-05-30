@@ -67,7 +67,7 @@ echo export CHAIN_ID=${CHAIN_ID} >> $HOME/.bash_profile
 echo export DELAY=120 >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
-mkdir $HOME/tgbot
+mkdir $HOME/tgbotjail
 wget -O $HOME/tgbotjail/start.sh https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/tgbotjail/start.sh
 chmod +x $HOME/tgbotjail/start.sh
 break
