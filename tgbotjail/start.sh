@@ -1,10 +1,13 @@
 #!/bin/bash
-
-ip=$(wget -qO- eth0.me)
+LOG_FILE="/root/tgbotjail/nodealerts.log"
 
 source $HOME/.bash_profile
 
+touch $LOG_FILE
+
 JAIL=$(${PROJECT} q staking validator $( echo "${PWDDD}" | ${PROJECT} keys show ${WALLETNAME} --bech val -a) | grep jailed:);
+echo 'JAIL="'"$JAIL"'"' >> $LOG_FILE
+source $LOG_FILE
 if [[ ${JAIL} == *"false"* ]]; then
     echo -e "${JAIL} \n"
    
