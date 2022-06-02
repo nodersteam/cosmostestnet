@@ -8,7 +8,7 @@ touch $LOG_FILE
 JAIL=$(${PROJECT} q staking validator $( echo "${PWDDD}" | ${PROJECT} keys show ${WALLETNAME} --bech val -a) | grep jailed:);
 echo 'JAIL="'"$JAIL"'"' >> $LOG_FILE
 source $LOG_FILE
-if [[ ${JAIL} == *"false"* ]]; then
+if [[ ${JAIL} == *"true"* ]]; then
     echo -e "${JAIL} \n"
    
     else
