@@ -27,7 +27,7 @@ select opt in "${options[@]}"
 do
 case $opt in
 
-"Delete Node"
+"Delete Node")
 sudo systemctl stop celestia-appd
 sudo systemctl disable celestia-appd
 rm -r $HOME/.celestia-appd
