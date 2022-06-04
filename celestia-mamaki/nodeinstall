@@ -30,8 +30,8 @@ case $opt in
 "Delete Node")
 sudo systemctl stop celestia-appd
 sudo systemctl disable celestia-appd
-rm -r $HOME/.celestia-appd
-rm -r $HOME/celestia-appd
+rm -r $HOME/.celestia-app
+rm -r $HOME/celestia-app
 rm -f /etc/systemd/system/celestia-appd.service
 break
 ;;
