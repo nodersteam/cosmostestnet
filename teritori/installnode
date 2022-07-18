@@ -204,7 +204,7 @@ echo "Address: $TERITORIADDRWALL"
 echo "Your balance: $(teritorid query bank balances $TERITORIADDRWALL)"
 echo "============================================================"
 break
-;
+;;
 
 "Check validator") 
 echo "============================================================"
