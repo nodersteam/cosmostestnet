@@ -209,7 +209,7 @@ break
 
 "Check validator") 
 echo "============================================================"
-echo "Account request: $(teritorid q auth account $(teritorid keys show $TERITORIWALL -a) -o text)"
+echo "Account request: $(teritorid q auth account $(teritorid keys show $TERITORIADDRWALL -a) -o text)"
 echo "Validator info: $(teritorid q staking validator $TERITORIVAL)"
 echo "============================================================"
 break
