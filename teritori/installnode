@@ -90,7 +90,7 @@ cd teritori-chain
 git checkout teritori-testnet-v2
 make install
 
-teritorid init $TERITRINODE --chain-id ;TERITORICHAIN
+teritorid init $TERITRINODE --chain-id $TERITORICHAIN
 
 teritorid tendermint unsafe-reset-all --home $HOME/.teritorid
 rm $HOME/.teritorid/config/genesis.json
