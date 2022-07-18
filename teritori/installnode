@@ -220,7 +220,7 @@ echo "To request tokens, you need to go to the Discord server in the
 fauccet channel and request tokens.
 Server in Discord - hhttps://discord.gg/krXFmeqd"
 echo "============================================================"
-echo "Copy and paste this \033[32m !faucet ${TERITORIADDRWALL} \033[37m"
+echo -f "Copy and paste this \033[32m !faucet $TERITORIADDRWALL \033[37m"
 echo "============================================================"
 break
 ;;
