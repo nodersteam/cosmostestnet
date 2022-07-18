@@ -22,7 +22,6 @@ options=(
 "Parametrs and balance" 
 "Create validator" 
 "Check validator"
-"Parametrs"  
 "Exit")
 select opt in "${options[@]}"
                do
