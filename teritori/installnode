@@ -216,12 +216,13 @@ break
 ;;
 
 "Request for tokens in Discord")
+request=$request
 echo "============================================================"
 echo "To request tokens, you need to go to the Discord server in the
 fauccet channel and request tokens.
 Server in Discord - https://discord.gg/krXFmeqd"
 echo "============================================================"
-echo -e "Copy and paste this \033[32m !faucet $TERITORIADDRWALL \033[37m"
+echo -e "Copy and paste this \033[32m $request $TERITORIADDRWALL \033[37m"
 echo "============================================================"
 break
 ;;
