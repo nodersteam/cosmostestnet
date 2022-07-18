@@ -18,7 +18,7 @@ options=(
 "Log Node" 
 "Check node status" 
 "Request for tokens in Discord" 
-"Balance" 
+"Parametrs and balance" 
 "Create validator" 
 "Check validator"
 "Parametrs"  
@@ -99,6 +99,7 @@ cp $HOME/teritori-chain/genesis/genesis.json $HOME/.teritorid/config/genesis.jso
 SEEDS=""
 PEERS="0b42fd287d3bb0a20230e30d54b4b8facc412c53@176.9.149.15:26656,2f394edda96be07bf92b0b503d8be13d1b9cc39f@5.9.40.222:26656,8ce81af6b4acee9688b9b3895fc936370321c0a3@78.46.106.69:26656"; \
 sed -i.bak -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.teritorid/config/config.toml
+wget -O $HOME/.teritorid/config/addrbook.json https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/teritori/addrbook.json
 
 # config pruning
 indexer="null"
@@ -218,7 +219,7 @@ break
 echo "============================================================"
 echo "To request tokens, you need to go to the Discord server in the
 fauccet channel and request tokens.
-Server in Discord - hhttps://discord.gg/krXFmeqd"
+Server in Discord - https://discord.gg/krXFmeqd"
 echo "============================================================"
 echo -e "Copy and paste this \033[32m !faucet $TERITORIADDRWALL \033[37m"
 echo "============================================================"
