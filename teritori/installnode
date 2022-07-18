@@ -76,7 +76,7 @@ echo "============================================================"
                
 read TERITORIWALLET
 TERITORIWALLET=$TERITORIWALLET
-echo 'export TERITORIWALLET='${ARCHWAYWALLET} >> $HOME/.bash_profile
+echo 'export TERITORIWALLET='${TERITORIWALLET} >> $HOME/.bash_profile
 TERITORICHAIN=""teritori-testnet-v2""
 echo 'export TERITORICHAIN='${TERITORICHAIN} >> $HOME/.bash_profile
 source $HOME/.bash_profile
