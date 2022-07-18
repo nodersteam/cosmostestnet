@@ -182,7 +182,7 @@ echo "Synchronization status = $(curl -s localhost:26657/status)"
 echo "============================================================"
                
 teritorid tx staking create-validator \
-  --amount 1000000muon \
+  --amount 1000000utori \
   --from $TERITORIWALLET \
   --commission-max-change-rate "0.05" \
   --commission-max-rate "0.20" \
