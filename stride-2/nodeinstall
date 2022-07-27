@@ -241,7 +241,7 @@ echo "To request tokens, you need to go to the Discord server in the
 fauccet channel and request tokens.
 Server in Discord - https://discord.gg/ebR5Rc7q"
 echo "============================================================"
-echo -e "Copy and paste this \033[32m $faucet-stride: $STRIDEADDRWALL \033[37m"
+echo -e "Copy and paste this \033[32m \$faucet-stride: $STRIDEADDRWALL \033[37m"
 echo "============================================================"
 break
 ;;
