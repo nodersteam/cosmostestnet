@@ -146,7 +146,7 @@ echo "============================================================"
 break
 ;;
 
-"Recover wallet"
+"Recover wallet")
 
 strided keys add $STRIDEWALLET --recover
 STRIDEADDRWALL=$(strided keys show $STRIDEWALLET -a)
