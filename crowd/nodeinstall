@@ -85,10 +85,10 @@ source $HOME/.bash_profile
 echo "============================================================"
 echo "Installation started"
 echo "============================================================"
-mkdir usr/lockal/bin
+mkdir usr/local/bin
 wget https://github.com/DecentralCardGame/Cardchain/releases/download/latest/Cardchain_latest_linux_amd64.tar.gz
 tar -xvzf Cardchain_latest_linux_amd64.tar.gz
-mv /root/Cardchaind usr/lockal/bin
+mv /root/Cardchaind usr/local/bin
 cardchain version
 
 cardchain init $CROWDNODE --chain-id $CROWDCHAIN
