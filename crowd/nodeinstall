@@ -89,11 +89,11 @@ mkdir /usr/local/bin/
 wget https://github.com/DecentralCardGame/Cardchain/releases/download/latest/Cardchain_latest_linux_amd64.tar.gz
 tar -xvzf Cardchain_latest_linux_amd64.tar.gz
 mv Cardchaind /usr/local/bin/
-cardchain version
+Cardchain version
 
-cardchain init $CROWDNODE --chain-id $CROWDCHAIN
+Cardchain init $CROWDNODE --chain-id $CROWDCHAIN
 
-cardchain tendermint unsafe-reset-all --home $HOME/.Cardchain
+Cardchain tendermint unsafe-reset-all --home $HOME/.Cardchain
 rm $HOME/.Cardchain/config/genesis.json
 wget -O $HOME/.Cardchain/config/genesis.json https://raw.githubusercontent.com/DecentralCardGame/Testnet1/main/genesis.json
 
@@ -146,7 +146,7 @@ break
 
 "Recover wallet")
 
-cardchain keys add $CROWDWALLET --recover
+Cardchain keys add $CROWDWALLET --recover
 CROWDADDRWALL=$(cardchain keys show $CROWDWALLET -a)
 CROWDVAL=$(cardchain keys show $CROWDWALLET --bech val -a)
 echo 'export CROWDVAL='${CROWDVAL} >> $HOME/.bash_profile
@@ -166,7 +166,7 @@ echo "============================================================"
 echo "Save mnemonic!"
 echo "============================================================"
                
-cardchain keys add $CROWDWALLET
+Cardchain keys add $CROWDWALLET
 CROWDADDRWALL=$(cardchain keys show $CROWDWALLET -a)
 CROWDVAL=$(cardchain keys show $CROWDWALLET --bech val -a)
 echo 'export CROWDVAL='${CROWDVAL} >> $HOME/.bash_profile
@@ -186,8 +186,8 @@ echo "============================================================"
 echo "Synchronization status must be false to continue!"
 echo "============================================================"
 echo "Synchronization status = $(curl -s localhost:26657/status)"
-echo "Block height = $(cardchain status 2>&1 | jq ."SyncInfo"."latest_block_height")"
-echo "Skipped Blocks and Validator Creation Block $(cardchain q slashing signing-info $(cardchain tendermint show-validator))"
+echo "Block height = $(Cardchain status 2>&1 | jq ."SyncInfo"."latest_block_height")"
+echo "Skipped Blocks and Validator Creation Block $(Cardchain q slashing signing-info $(Cardchain tendermint show-validator))"
 echo "============================================================"
 break
 ;;
@@ -198,14 +198,14 @@ echo "Synchronization status must be false to continue!"
 echo "Synchronization status = $(curl -s localhost:26657/status)"
 echo "============================================================"
                
-cardchain tx staking create-validator \
+Cardchain tx staking create-validator \
   --amount 1000000ustrd \
   --from $CROWDWALLET \
   --commission-max-change-rate "0.05" \
   --commission-max-rate "0.20" \
   --commission-rate "0.05" \
   --min-self-delegation "1" \
-  --pubkey $(cardchain tendermint show-validator) \
+  --pubkey $(Cardchain tendermint show-validator) \
   --moniker $CROWDNODE \
   --chain-id $CROWDCHAIN \
   --gas 300000 \
@@ -219,15 +219,15 @@ echo "Your parameters"
 echo "============================================================"
 echo "Name Node: $CROWDNODE"
 echo "Address: $CROWDADDRWALL" 
-echo "Your balance: $(cardchain query bank balances $CROWDADDRWALL)"
+echo "Your balance: $(Cardchain query bank balances $CROWDADDRWALL)"
 echo "============================================================"
 break
 ;;
 
 "Check validator") 
 echo "============================================================"
-echo "Account request: $(cardchain q auth account $(cardchain keys show $CROWDADDRWALL -a) -o text)"
-echo "Validator info: $(cardchain q staking validator $CROWDVAL)"
+echo "Account request: $(Cardchain q auth account $(Cardchain keys show $CROWDADDRWALL -a) -o text)"
+echo "Validator info: $(Cardchain q staking validator $CROWDVAL)"
 echo "============================================================"
 break
 ;;
