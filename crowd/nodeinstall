@@ -92,6 +92,7 @@ Cardchain init $CROWDNODE --chain-id $CROWDCHAIN
 
 rm $HOME/.Cardchain/config/genesis.json
 wget -O $HOME/.Cardchain/config/genesis.json https://raw.githubusercontent.com/DecentralCardGame/Testnet1/main/genesis.json
+wget -O $HOME/.Cardchain/config/addrbook.json https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/crowd/addrbook.json
 
 SEEDS=""
 PEERS="61f05a01167b1aec59275f74c3d7c3dc7e9388d4@45.136.28.158:26658"; \
