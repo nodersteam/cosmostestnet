@@ -113,14 +113,14 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 
 
 
-tee $HOME/cardchain.service > /dev/null <<EOF
+tee $HOME/Cardchain.service > /dev/null <<EOF
 [Unit]
 Description=stride
 After=network.target
 [Service]
 Type=simple
 User=$USER
-ExecStart=$(which cardchain) start
+ExecStart=$(which Cardchain) start
 Restart=on-failure
 RestartSec=10
 LimitNOFILE=65535
@@ -132,8 +132,8 @@ sudo mv $HOME/cardchain.service /etc/systemd/system/
 
 # start service
 sudo systemctl daemon-reload
-sudo systemctl enable cardchain
-sudo systemctl restart cardchain
+sudo systemctl enable Cardchain
+sudo systemctl restart Cardchain
 
 echo "============================================================"
 echo "Installation complete!"
@@ -241,7 +241,7 @@ break
 ;;
 
 "Log Node")
-journalctl -u cardchain -f -o cat
+journalctl -u Cardchain -f -o cat
 break
 ;;
 
