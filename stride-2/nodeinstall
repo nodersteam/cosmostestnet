@@ -85,7 +85,7 @@ source $HOME/.bash_profile
 echo "============================================================"
 echo "Installation started"
 echo "============================================================"
-mkdir root/go/bin 
+mkdir $HOME/go/bin
 git clone https://github.com/Stride-Labs/stride.git strided && \
 cd strided && \
 git checkout 3cb77a79f74e0b797df5611674c3fbd000dfeaa1 && \
