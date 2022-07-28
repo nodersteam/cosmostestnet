@@ -90,7 +90,6 @@ Cardchain version
 
 Cardchain init $CROWDNODE --chain-id $CROWDCHAIN
 
-Cardchain tendermint unsafe-reset-all --home $HOME/.Cardchain
 rm $HOME/.Cardchain/config/genesis.json
 wget -O $HOME/.Cardchain/config/genesis.json https://raw.githubusercontent.com/DecentralCardGame/Testnet1/main/genesis.json
 
@@ -115,7 +114,7 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 
 tee $HOME/Cardchain.service > /dev/null <<EOF
 [Unit]
-Description=stride
+Description=Cardchain
 After=network.target
 [Service]
 Type=simple
@@ -128,7 +127,7 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
-sudo mv $HOME/cardchain.service /etc/systemd/system/
+sudo mv $HOME/Cardchain.service /etc/systemd/system/
 
 # start service
 sudo systemctl daemon-reload
