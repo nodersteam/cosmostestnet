@@ -196,7 +196,7 @@ echo "Synchronization status = $(curl -s localhost:26657/status)"
 echo "============================================================"
                
 Cardchain tx staking create-validator \
-  --amount 1000000ustrd \
+  --amount 1000000ubpf \
   --from $CROWDWALLET \
   --commission-max-change-rate "0.05" \
   --commission-max-rate "0.20" \
