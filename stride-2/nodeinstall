@@ -43,13 +43,13 @@ sudo apt install curl tar wget clang pkg-config libssl-dev jq build-essential bs
 
 #INSTALL GO
 echo "============================================================"
-echo "Install GO 1.18.1"
+echo "Install GO 1.18.3"
 echo "============================================================"
 sleep 3
-wget https://golang.org/dl/go1.18.1.linux-amd64.tar.gz; \
+wget https://golang.org/dl/go1.18.3.linux-amd64.tar.gz; \
 rm -rv /usr/local/go; \
-tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz && \
-rm -v go1.18.1.linux-amd64.tar.gz && \
+tar -C /usr/local -xzf go1.18.3.linux-amd64.tar.gz && \
+rm -v go1.18.3.linux-amd64.tar.gz && \
 echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile && \
 source ~/.bash_profile && \
 go version > /dev/null
@@ -78,29 +78,28 @@ echo "============================================================"
 read STRIDEWALLET
 STRIDEWALLET=$STRIDEWALLET
 echo 'export STRIDEWALLET='${STRIDEWALLET} >> $HOME/.bash_profile
-STRIDECHAIN=""STRIDE-TESTNET-2""
+STRIDECHAIN=""STRIDE-TESTNET-4""
 echo 'export STRIDECHAIN='${STRIDECHAIN} >> $HOME/.bash_profile
 source $HOME/.bash_profile
 
 echo "============================================================"
 echo "Installation started"
 echo "============================================================"
-mkdir $HOME/go/bin
-git clone https://github.com/Stride-Labs/stride.git strided && \
-cd strided && \
-git checkout 3cb77a79f74e0b797df5611674c3fbd000dfeaa1 && \
-sh ./scripts-local/build.sh -s $HOME/go/bin
-#go build -mod=readonly -trimpath -o $HOME/go/bin ./...
+git clone https://github.com/Stride-Labs/stride.git && cd stride
+git checkout cf4e7f2d4ffe2002997428dbb1c530614b85df1b
+make build
+mkdir -p $HOME/go/bin
+sudo mv build/strided /root/go/bin/
 strided version
 
 strided init $STRIDENODE --chain-id $STRIDECHAIN
 
 strided tendermint unsafe-reset-all --home $HOME/.stride
 rm $HOME/.stride/config/genesis.json
-wget -O $HOME/.stride/config/genesis.json https://raw.githubusercontent.com/Stride-Labs/testnet/main/poolparty/genesis.json
+wget -O $HOME/.stride/config/genesis.json "https://raw.githubusercontent.com/Stride-Labs/testnet/main/poolparty/genesis.json"
 
 SEEDS=""
-PEERS="c0b278cbfb15674e1949e7e5ae51627cb2a2d0a9@seedv2.poolparty.stridenet.co:26656"; \
+PEERS="54a11c47658ebd5dcbd70eb3c62197b439482d3f@116.202.236.115:21016"; \
 sed -i.bak -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.stride/config/config.toml
 
 # config pruning
@@ -255,7 +254,7 @@ break
 systemctl stop strided
 systemctl disable strided
 rm /etc/systemd/system/strided.service
-rm -r .stride strided
+rm -rf .stride strided
 break
 ;;
 
