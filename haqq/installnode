@@ -148,7 +148,7 @@ break
 
 "Recover wallet")
 
-haqqd keys add $HAQQEWALLET --recover
+haqqd keys add $HAQQWALLET --recover
 HAQQADDRWALL=$(haqqd keys show $HAQQWALLET -a)
 HAQQVAL=$(haqqd keys show $HAQQWALLET --bech val -a)
 echo 'export HAQQVAL='${HAQQVAL} >> $HOME/.bash_profile
@@ -168,7 +168,7 @@ echo "============================================================"
 echo "Save mnemonic!"
 echo "============================================================"
                
-haqqd keys add $HAQQEWALLET
+haqqd keys add $HAQQWALLET
 HAQQADDRWALL=$(haqqd keys show $HAQQWALLET -a)
 HAQQVAL=$(haqqd keys show $HAQQWALLET --bech val -a)
 echo 'export HAQQVAL='${HAQQVAL} >> $HOME/.bash_profile
