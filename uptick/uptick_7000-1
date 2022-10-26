@@ -1,0 +1,252 @@
+#!/bin/bash
+
+while true
+do
+
+# Logo
+source ~/.bash_profile
+
+echo "============================================================"
+curl -s https://raw.githubusercontent.com/AlekseyMoskalev1/script/main/Noders.sh | bash
+echo "============================================================"
+
+
+PS3='Select an action: '
+options=(
+"Prepare the server for installation" 
+"Install Uptick Node" 
+"Create wallet"
+"Recover wallet"
+"Log Node" 
+"Check node status" 
+"Request for tokens in Discord" 
+"Parametrs and balance" 
+"Create validator" 
+"Check validator"
+"Exit")
+select opt in "${options[@]}"
+               do
+                   case $opt in
+                   
+"Prepare the server for installation")
+echo "============================================================"
+echo "Preparation has begun"
+echo "============================================================"
+
+#INSTALL DEPEND
+echo "============================================================"
+echo "Update and install APT"
+echo "============================================================"
+sleep 3
+sudo apt update && sudo apt upgrade -y && \
+sudo apt install curl tar wget clang pkg-config libssl-dev libleveldb-dev jq build-essential bsdmainutils git make ncdu htop screen unzip bc fail2ban htop -y
+
+#INSTALL GO
+echo "============================================================"
+echo "Install GO 1.18.3"
+echo "============================================================"
+sleep 3
+cd $HOME && \
+ver="1.18.3" && \
+wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz" && \
+sudo rm -rf /usr/local/go && \
+sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz" && \
+rm "go$ver.linux-amd64.tar.gz" && \
+echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile && \
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "The server is ready!"
+echo "============================================================"
+break
+;;
+            
+"Install Uptick Node")
+echo "============================================================"
+echo "Set parameters"
+echo "============================================================"
+echo "Enter NodName:"
+echo "============================================================"
+                
+read NODENAME
+NODENAME=$NODENAME
+echo 'export NODENAME='${NODENAME} >> $HOME/.bash_profile
+
+echo "============================================================"
+echo "Enter WalletName:"
+echo "============================================================"
+               
+read NODEWALLET
+NODEWALLET=$NODEWALLET
+echo 'export NODEWALLET='${NODEWALLET} >> $HOME/.bash_profile
+NODECHAIN=""uptick_7000-1""
+echo 'export NODECHAIN='${NODECHAIN} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "Installation started"
+echo "============================================================"
+wget https://download.uptick.network/download/uptick/testnet/release/v0.2.3/v0.2.3.tar.gz --no-check-certificate && \
+tar -zxvf v0.2.3.tar.gz && \
+chmod +x uptick-v0.2.3/linux/uptickd && \
+cp uptick-v0.2.3/linux/uptickd $HOME/go/bin/
+
+cd  $HOME/.uptickd
+sudo rm -rf data
+wget https://download.uptick.network/download/uptick/testnet/node/data/data.tar.gz --no-check-certificate && \
+tar -zxvf data.tar.gz && \
+sudo rm data.tar.gz
+
+uptickd init $NODENAME --chain-id=uptick_7000-1
+
+curl -o $HOME/.uptickd/config/config.toml https://raw.githubusercontent.com/UptickNetwork/uptick-testnet/main/uptick_7000-1/config.toml
+curl -o $HOME/.uptickd/config/genesis.json https://raw.githubusercontent.com/UptickNetwork/uptick-testnet/main/uptick_7000-1/genesis.json
+curl -o $HOME/.uptickd/config/app.toml https://raw.githubusercontent.com/UptickNetwork/uptick-testnet/main/uptick_7000-1/app.toml
+curl -o $HOME/.uptickd/config/addrbook.json https://cdn.discordapp.com/attachments/960153288878198874/1032009527668781116/addrbook.json
+
+sudo tee /etc/systemd/system/uptickd.service > /dev/null <<EOF
+[Unit]
+Description=uptickd
+After=network-online.target
+
+[Service]
+User=$USER
+ExecStart=$(which uptickd) start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# start service
+sudo systemctl daemon-reload
+sudo systemctl enable uptickd
+sudo systemctl start uptickd
+
+echo "============================================================"
+echo "Installation complete!"
+echo "============================================================"
+break
+;;
+
+"Recover wallet")
+
+uptickd keys add $NODEWALLET --recover
+NODEADDRWALL=$(uptickd keys show $NODEWALLET -a)
+NODEVAL=$(uptickd keys show $NODEWALLET --bech val -a)
+echo 'export NODEVAL='${NODEVAL} >> $HOME/.bash_profile
+echo 'export NODEADDRWALL='${NODEADDRWALL} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "Wallet addres: $NODEADDRWALL"
+echo "Valoper addres: $NODEVAL"
+echo "============================================================"
+
+break
+;;
+
+"Create wallet")
+echo "============================================================"
+echo "Save mnemonic!"
+echo "============================================================"
+               
+uptickd keys add $NODEWALLET
+NODEADDRWALL=$(uptickd keys show $NODEWALLET -a)
+NODEVAL=$(uptickd keys show $NODEWALLET --bech val -a)
+echo 'export NODEVAL='${NODEVAL} >> $HOME/.bash_profile
+echo 'export NODEADDRWALL='${NODEADDRWALL} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "Wallet addres: $NODEADDRWALL"
+echo "Valoper addres: $NODEVAL"
+echo "============================================================"
+               
+break
+;;
+
+"Check node status")
+echo "============================================================"
+echo "Synchronization status must be false to continue!"
+echo "============================================================"
+echo "Synchronization status = $(curl -s localhost:26657/status)"
+echo "Block height = $(uptickd status 2>&1 | jq ."SyncInfo"."latest_block_height")"
+echo "Skipped Blocks and Validator Creation Block $(uptickd q slashing signing-info $(uptickd tendermint show-validator))"
+echo "============================================================"
+break
+;;
+
+"Create validator")
+echo "============================================================"
+echo "Synchronization status must be false to continue!"
+echo "Synchronization status = $(curl -s localhost:26657/status)"
+echo "============================================================"
+               
+uptickd tx staking create-validator \
+ --chain-id uptick_7000-1 \
+ --commission-rate 0.05 \
+ --commission-max-rate 0.2 \
+ --commission-max-change-rate 0.1 \
+ --min-self-delegation "1000000" \
+ --amount 4000000auptick \
+ --pubkey $(uptickd tendermint show-validator) \
+ --moniker $NODENAME \
+ --from $NODEWALLET \
+ --fees 500auptick \
+ --gas auto \
+ -y
+break
+;;
+
+"Parametrs and balance")
+echo "============================================================"
+echo "Your parameters"
+echo "============================================================"
+echo "Name Node: $NODENAME"
+echo "Address: $NODEADDRWALL" 
+echo "Your balance: $(uptickd query bank balances $NODEADDRWALL)"
+echo "============================================================"
+break
+;;
+
+"Check validator") 
+echo "============================================================"
+echo "Account request: $(uptickd q auth account $(uptickd keys show $NODEADDRWALL -a) -o text)"
+echo "Validator info: $(uptickd q staking validator $NODEVAL)"
+echo "============================================================"
+break
+;;
+
+"Request for tokens in Discord")
+echo "============================================================"
+echo "In order to request tokens - you need to go to the uptick discord server in the faucet branch"
+echo "============================================================"
+echo -e "Copy and paste this '$faucet' $(uptickd keys export $NODEWALLET)"
+echo "============================================================"
+break
+;;
+
+"Log Node")
+journalctl -u uptickd -f -o cat
+break
+;;
+
+"Delete node")
+systemctl stop uptickd
+systemctl disable uptickd
+rm /etc/systemd/system/uptickd.service
+rm -rf .uptickd uptick-v0.2.3
+break
+;;
+
+"Exit")
+exit
+;;
+
+*) echo "invalid option $REPLY";;
+esac
+done
+done
