@@ -1,0 +1,242 @@
+#!/bin/bash
+
+while true
+do
+
+# Logo
+source ~/.bash_profile
+
+echo "============================================================"
+curl -s https://raw.githubusercontent.com/AlekseyMoskalev1/script/main/Noders.sh | bash
+echo "============================================================"
+
+
+PS3='Select an action: '
+options=(
+"Prepare the server for installation" 
+"Install OLLO Node" 
+"Create wallet"
+"Recover wallet"
+"Log Node" 
+"Check node status" 
+"Request for tokens in Discord" 
+"Parametrs and balance" 
+"Create validator" 
+"Check validator"
+"Exit")
+select opt in "${options[@]}"
+               do
+                   case $opt in
+                   
+"Prepare the server for installation")
+echo "============================================================"
+echo "Preparation has begun"
+echo "============================================================"
+
+#INSTALL DEPEND
+echo "============================================================"
+echo "Update and install APT"
+echo "============================================================"
+sleep 3
+sudo apt update && sudo apt upgrade -y && \
+sudo apt install curl tar wget clang pkg-config libssl-dev libleveldb-dev jq build-essential bsdmainutils git make ncdu htop screen unzip bc fail2ban htop -y
+
+#INSTALL GO
+echo "============================================================"
+echo "Install GO 1.19.1"
+echo "============================================================"
+sleep 3
+cd $HOME && \
+ver="1.19.1" && \
+wget "https://golang.org/dl/go$ver.linux-amd64.tar.gz" && \
+sudo rm -rf /usr/local/go && \
+sudo tar -C /usr/local -xzf "go$ver.linux-amd64.tar.gz" && \
+rm "go$ver.linux-amd64.tar.gz" && \
+echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> $HOME/.bash_profile && \
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "The server is ready!"
+echo "============================================================"
+break
+;;
+            
+"Install OLLO Node")
+echo "============================================================"
+echo "Set parameters"
+echo "============================================================"
+echo "Enter NodName:"
+echo "============================================================"
+                
+read NODENAME
+NODENAME=$NODENAME
+echo 'export NODENAME='${NODENAME} >> $HOME/.bash_profile
+
+echo "============================================================"
+echo "Enter WalletName:"
+echo "============================================================"
+               
+read NODEWALLET
+NODEWALLET=$NODEWALLET
+echo 'export NODEWALLET='${NODEWALLET} >> $HOME/.bash_profile
+NODECHAIN=""ollo-testnet-0""
+echo 'export NODECHAIN='${NODECHAIN} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+
+echo "============================================================"
+echo "Installation started"
+echo "============================================================"
+git clone https://github.com/OLLO-Station/ollo && cd ollo
+make install
+
+ollod init $NODENAME --chain-id=$NODECHAIN
+ollod config chain-id ollo-testnet-0
+
+wget -O $HOME/.ollo/config/genesis.json "https://github.com/AlexToTheMoon/AM-Solutions/raw/main/ollo-genesis.json"
+wget -qO $HOME/.ollo/config/addrbook.json https://github.com/AlexToTheMoon/AM-Solutions/raw/main/ollo-addrbook.json
+
+sed -i.bak -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0.025utollo\"/;" ~/.ollo/config/app.toml
+external_address=$(wget -qO- eth0.me)
+sed -i.bak -e "s/^external_address *=.*/external_address = \"$external_address:26656\"/" $HOME/.ollo/config/config.toml
+peers="1be12d239ca70a906264de0f09e0ffa01c4211ba@138.201.136.49:26656,06658ccd5c119578fb662633234a2ef154881b94@18.144.61.148:26656,a77c2afc500569a453b7fb64c8a804878dc6e7be@65.108.127.215:26856,2eeb90b696ba9a62a8ad9561f39c1b75473515eb@77.37.176.99:26656,eaee85418b4fc3e7e2e298bb8deb5a8f49956859@5.9.13.234:26856,6e8c603e5eeefd4b83d0575951209c3b495848d6@65.108.69.68:26858,45acf9ea2f2d6a2a4b564ae53ea3004f902d3fb7@185.182.184.200:26656,62b5364abdfb7c0934afaddbd0704acf82127383@65.108.13.185:27060,f599dcd0a09d376f958910982d82351a6f8c178b@95.217.118.96:26878,e2b22ed4b00f37adafed6d711432f612821f5943@77.52.182.194:26656"
+sed -i.bak -e "s/^persistent_peers *=.*/persistent_peers = \"$peers\"/" $HOME/.ollo/config/config.toml
+sed -i -e "s/^filter_peers *=.*/filter_peers = \"true\"/" $HOME/.ollo/config/config.toml
+
+pruning="custom" && \
+pruning_keep_recent="100" && \
+pruning_keep_every="0" && \
+pruning_interval="50" && \
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.ollo/config/app.toml && \
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/.ollo/config/app.toml && \
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.ollo/config/app.toml && \
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.ollo/config/app.toml
+
+sudo tee /etc/systemd/system/ollod.service > /dev/null <<EOF
+[Unit]
+Description=ollod
+After=network-online.target
+
+[Service]
+User=$USER
+ExecStart=$(which ollod) start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# start service
+sudo systemctl daemon-reload
+sudo systemctl enable ollod
+sudo systemctl start ollod
+echo "============================================================"
+echo "Installation complete!"
+echo "============================================================"
+break
+;;
+"Recover wallet")
+ollod keys add $NODEWALLET --recover
+NODEADDRWALL=$(ollod keys show $NODEWALLET -a)
+NODEVAL=$(ollod keys show $NODEWALLET --bech val -a)
+echo 'export NODEVAL='${NODEVAL} >> $HOME/.bash_profile
+echo 'export NODEADDRWALL='${NODEADDRWALL} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+echo "============================================================"
+echo "Wallet addres: $NODEADDRWALL"
+echo "Valoper addres: $NODEVAL"
+echo "============================================================"
+break
+;;
+"Create wallet")
+echo "============================================================"
+echo "Save mnemonic!"
+echo "============================================================"
+               
+ollod keys add $NODEWALLET
+NODEADDRWALL=$(ollod keys show $NODEWALLET -a)
+NODEVAL=$(ollod keys show $NODEWALLET --bech val -a)
+echo 'export NODEVAL='${NODEVAL} >> $HOME/.bash_profile
+echo 'export NODEADDRWALL='${NODEADDRWALL} >> $HOME/.bash_profile
+source $HOME/.bash_profile
+echo "============================================================"
+echo "Wallet addres: $NODEADDRWALL"
+echo "Valoper addres: $NODEVAL"
+echo "============================================================"
+               
+break
+;;
+"Check node status")
+echo "============================================================"
+echo "Synchronization status must be false to continue!"
+echo "============================================================"
+echo "Synchronization status = $(curl -s localhost:26657/status)"
+echo "Block height = $(ollod status 2>&1 | jq ."SyncInfo"."latest_block_height")"
+echo "Skipped Blocks and Validator Creation Block $(ollod q slashing signing-info $(ollod tendermint show-validator))"
+echo "============================================================"
+break
+;;
+"Create validator")
+echo "============================================================"
+echo "Synchronization status must be false to continue!"
+echo "Synchronization status = $(curl -s localhost:26657/status)"
+echo "============================================================"
+               
+ollod tx staking create-validator \
+--chain-id ollo-testnet-0 \
+--commission-rate 0.05 \
+--commission-max-rate 0.2 \
+--commission-max-change-rate 0.1 \
+--min-self-delegation "1000000" \
+--amount 1000000utollo \
+--pubkey $(ollod tendermint show-validator) \
+--moniker "$NODENAME" \
+--from $NODEWALLET> \
+--fees 5000utollo
+
+break
+;;
+"Parametrs and balance")
+echo "============================================================"
+echo "Your parameters"
+echo "============================================================"
+echo "Name Node: $NODENAME"
+echo "Address: $NODEADDRWALL" 
+echo "Your balance: $(ollod query bank balances $NODEADDRWALL)"
+echo "============================================================"
+break
+;;
+"Check validator") 
+echo "============================================================"
+echo "Account request: $(ollod q auth account $(ollod keys show $NODEADDRWALL -a) -o text)"
+echo "Validator info: $(ollod q staking validator $NODEVAL)"
+echo "============================================================"
+break
+;;
+"Request for tokens in Discord")
+echo "============================================================"
+echo "In order to request tokens - you need to go https://discord.gg/tP2SFx8n in faucet and request token"
+echo "============================================================"
+echo -e "Your address $(ollod keys export $NODEWALLET)"
+echo "============================================================"
+break
+;;
+"Log Node")
+journalctl -u ollod -f -o cat
+break
+;;
+"Delete node")
+systemctl stop ollod
+systemctl disable ollod
+rm /etc/systemd/system/ollod.service
+rm -rf .ollo ollo
+break
+;;
+"Exit")
+exit
+;;
+*) echo "invalid option $REPLY";;
+esac
+done
+done
