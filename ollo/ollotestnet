@@ -192,7 +192,7 @@ ollod tx staking create-validator \
 --amount 1000000utollo \
 --pubkey $(ollod tendermint show-validator) \
 --moniker "$NODENAME" \
---from $NODEWALLET> \
+--from $NODEWALLET \
 --fees 5000utollo
 
 break
