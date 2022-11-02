@@ -97,7 +97,7 @@ nibid config chain-id nibiru-testnet-1
 
 curl -s https://rpc.testnet-1.nibiru.fi/genesis | jq -r .result.genesis > genesis.json
 cp genesis.json $HOME/.nibid/config/genesis.json
-wget -O $HOME/.haqqd/config/addrbook.json "https://raw.githubusercontent.com/obajay/nodes-Guides/main/Nibiru/addrbook.json"
+wget -O $HOME/.nibid/config/addrbook.json "https://raw.githubusercontent.com/obajay/nodes-Guides/main/Nibiru/addrbook.json"
 
 pruning="custom" && \
 pruning_keep_recent="100" && \
