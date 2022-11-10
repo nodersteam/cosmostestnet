@@ -90,7 +90,7 @@ rm -rf $HOME/celestia-app $HOME/.celestia-app
 git clone https://github.com/celestiaorg/celestia-app
 cd celestia-app
 git fetch
-git checkout v0.9.0
+git checkout v0.6.0
 make install
 
 celestia-appd init $NODENAME --chain-id $CHAIN_ID
