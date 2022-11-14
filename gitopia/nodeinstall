@@ -99,6 +99,8 @@ wget https://server.gitopia.com/raw/gitopia/testnets/master/gitopia-janus-testne
 gunzip genesis.json.gz
 mv genesis.json $HOME/.gitopia/config/genesis.json
 
+wget -O $HOME/.gitopia/config/addrbook.json https://raw.githubusercontent.com/nodersteam/cosmostestnet/main/gitopia/addrbook.json
+
 sed -i '' 's#seeds = ""#seeds = "399d4e19186577b04c23296c4f7ecc53e61080cb@seed.gitopia.com:26656"#' $HOME/.gitopia/config/config.toml
 
 sudo tee /etc/systemd/system/gitopiad.service > /dev/null <<EOF
